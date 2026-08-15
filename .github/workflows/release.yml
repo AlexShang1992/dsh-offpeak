@@ -25,7 +25,11 @@ jobs:
   publish:
     name: publish to npm
     needs: release-please
-    if: ${{ needs.release-please.outputs.release_created }}
+    # Publishing is opt-in. Turn it on by adding the NPM_TOKEN secret and
+    # setting the repository variable PUBLISH_TO_NPM to "true"; until then a
+    # release is tagged and published on GitHub only, and this job is skipped
+    # instead of failing on a missing token.
+    if: ${{ needs.release-please.outputs.release_created && vars.PUBLISH_TO_NPM == 'true' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
