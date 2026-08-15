@@ -1,0 +1,9 @@
+# dsh-offpeak bundle patch — applied after the web-app layer, before the
+# user's own cordis.patch.yml. Mounts the plugin's code row (host half) so
+# the Loader resolves the `dsh-offpeak` package from the profile's
+# node_modules. The client half is served automatically from
+# /plugins/dsh-offpeak/client.js; no extra row is required.
+
+- insert:
+    - id: dsh-offpeak
+      name: dsh-offpeak

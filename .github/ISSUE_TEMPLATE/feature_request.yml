@@ -1,0 +1,35 @@
+name: Feature request
+description: Suggest a feature or improvement for dsh-offpeak
+labels: [enhancement]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the idea! Check the [roadmap](https://github.com/dsh-offpeak/dsh-offpeak#roadmap)
+        first — the feature may already be planned.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What problem are you trying to solve? Be concrete.
+      placeholder: During peak hours I keep forgetting to defer batch jobs…
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: What should the plugin do? Sketch the behavior or UI.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: What have you tried instead? (scripts, other plugins, manual work)
+  - type: checkboxes
+    id: contribution
+    attributes:
+      label: Contribution
+      options:
+        - label: I'm willing to implement this and open a PR

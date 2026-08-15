@@ -1,0 +1,12 @@
+{
+  "name": "dsh-offpeak",
+  "description": "Off-peak cost autopilot for DeepSeek Harness: peak/off-peak pricing awareness, defer queue, and savings ledger.",
+  "version": "0.1.0",
+  "entry": {
+    "name": "dsh-offpeak",
+    "inject": ["tools", "settings", "commands", "typert"]
+  },
+  "client": {
+    "platform": "web"
+  }
+}
