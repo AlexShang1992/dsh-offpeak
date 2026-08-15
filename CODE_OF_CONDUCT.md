@@ -56,9 +56,10 @@ an individual is officially representing the community in public spaces.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-[conduct@dsh-offpeak.dev](mailto:conduct@dsh-offpeak.dev) (placeholder — replace
-with a real address before enabling enforcement).
+reported privately to the maintainer through the contact details on
+[github.com/AlexShang1992](https://github.com/AlexShang1992). Conduct that
+violates GitHub's own terms can also be reported directly to GitHub through
+[Report abuse](https://github.com/contact/report-abuse).
 All complaints will be reviewed and investigated promptly and fairly.
 
 All community leaders are obligated to respect the privacy and security of the

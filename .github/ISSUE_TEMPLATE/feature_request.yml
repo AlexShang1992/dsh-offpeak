@@ -12,7 +12,7 @@ body:
     attributes:
       label: Problem
       description: What problem are you trying to solve? Be concrete.
-      placeholder: During peak hours I keep forgetting to defer batch jobs…
+      placeholder: I keep starting expensive runs without noticing the window has switched…
     validations:
       required: true
   - type: textarea

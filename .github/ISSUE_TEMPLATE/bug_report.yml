@@ -45,7 +45,7 @@ body:
     id: steps
     attributes:
       label: Steps to reproduce
-      description: What did you do? Include exact commands (e.g. `/defer foo`) and what the UI showed.
+      description: What did you do? Include the settings you had, and what the pill or the settings form showed.
       placeholder: |
         1. Install dsh-offpeak
         2. Run /offpeak
