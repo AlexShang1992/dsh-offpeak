@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.1](https://github.com/AlexShang1992/dsh-offpeak/compare/v0.1.0...v0.1.1) (2026-08-15)
+
+
+### Bug Fixes
+
+* **release:** ship an install tarball instead of a broken git reference ([b0ee68b](https://github.com/AlexShang1992/dsh-offpeak/commit/b0ee68bcc25f544b1f056fea279bfc8130b8c8ba))
+
 ## 0.1.0 (2026-08-15)
 
 
