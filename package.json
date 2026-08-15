@@ -1,8 +1,11 @@
 {
   "name": "dsh-offpeak",
   "version": "0.1.0",
-  "description": "Off-peak cost autopilot for DeepSeek Harness: peak/off-peak pricing awareness, defer queue, and savings ledger for the DSH web GUI. · DeepSeek Harness 错峰省钱助手",
+  "description": "A live peak/off-peak pricing readout for the DeepSeek Harness Web GUI: one status pill under the composer, with the effective prices on hover. \u00b7 DeepSeek Harness \u9519\u5cf0\u8ba1\u4ef7\u6d6e\u6807",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
   "type": "module",
   "main": "lib/index.js",
   "types": "lib/types/index.d.ts",
@@ -23,6 +26,7 @@
     "dsh.plugin.json",
     "README.md",
     "README.zh.md",
+    "README.i18n.yaml",
     "LICENSE"
   ],
   "engines": {
@@ -37,12 +41,10 @@
     "off-peak",
     "peak",
     "pricing",
-    "cost",
-    "savings",
-    "错峰",
-    "省钱"
+    "\u9519\u5cf0",
+    "\u8ba1\u4ef7"
   ],
-  "author": "dsh-offpeak contributors",
+  "author": "Alex Shang <xinpengshang@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AlexShang1992/dsh-offpeak.git"
@@ -69,6 +71,7 @@
   },
   "scripts": {
     "build": "node build.mjs",
+    "prepare": "node build.mjs",
     "typecheck": "tsc --noEmit -p tsconfig.test.json",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -78,7 +81,6 @@
   },
   "peerDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-agent": "*",
     "@deepseek-ai/dsh-api-remotes": "*",
     "@deepseek-ai/dsh-client-connection": "*",
     "@deepseek-ai/dsh-client-locale": "*",
@@ -86,19 +88,13 @@
     "@deepseek-ai/dsh-client-ui-conversation": "*",
     "@deepseek-ai/dsh-client-ui-settings": "*",
     "@deepseek-ai/dsh-client-ui-slots": "*",
-    "@deepseek-ai/dsh-commands": "*",
-    "@deepseek-ai/dsh-session": "*",
     "@deepseek-ai/dsh-settings": "*",
-    "@deepseek-ai/dsh-tools": "*",
     "@deepseek-ai/dsh-typert-protocol": "*",
     "@deepseek-ai/dsh-typert-registry": "*",
     "react": "^18.2.0"
   },
   "peerDependenciesMeta": {
     "@deepseek-ai/cordis": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-agent": {
       "optional": true
     },
     "@deepseek-ai/dsh-api-remotes": {
@@ -122,16 +118,7 @@
     "@deepseek-ai/dsh-client-ui-slots": {
       "optional": true
     },
-    "@deepseek-ai/dsh-commands": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-session": {
-      "optional": true
-    },
     "@deepseek-ai/dsh-settings": {
-      "optional": true
-    },
-    "@deepseek-ai/dsh-tools": {
       "optional": true
     },
     "@deepseek-ai/dsh-typert-protocol": {
@@ -150,7 +137,6 @@
   },
   "devDependencies": {
     "@deepseek-ai/cordis": "^4.0.1",
-    "@deepseek-ai/dsh-agent": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-api-remotes": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-client-connection": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-client-locale": "^0.1.0-rc.6",
@@ -158,10 +144,7 @@
     "@deepseek-ai/dsh-client-ui-conversation": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-client-ui-settings": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-client-ui-slots": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-commands": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-session": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-settings": "^0.1.0-rc.6",
-    "@deepseek-ai/dsh-tools": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-typert-protocol": "^0.1.0-rc.6",
     "@deepseek-ai/dsh-typert-registry": "^0.1.0-rc.6",
     "@types/node": "^24.0.0",

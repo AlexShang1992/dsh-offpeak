@@ -5,7 +5,7 @@
  * the client mounts them explicitly through `ctx.remote.$mount`.
  */
 import type { TypertRemoteContribution } from '@deepseek-ai/dsh-typert-protocol'
-import { OFFPEAK_INVOCATIONS, type LedgerEntry, type OffpeakSettings, type OffpeakSettingsUpdate, type OffpeakStatus, type QueueEntry } from '../contract.ts'
+import { OFFPEAK_INVOCATIONS, type OffpeakSettings, type OffpeakSettingsUpdate } from '../contract.ts'
 
 /** The mounted Remote contribution (package + strict wire descriptors). */
 export const OFFPEAK_REMOTE: TypertRemoteContribution = {
@@ -18,11 +18,6 @@ export type RemoteResult<T> = { ok: true; value: T } | { ok: false; error: { cod
 
 /** The mounted offpeak namespace service's callable face. */
 export interface OffpeakRemoteFace {
-  getStatus(): Promise<RemoteResult<OffpeakStatus>>
   getSettings(): Promise<RemoteResult<OffpeakSettings>>
   updateSettings(update: OffpeakSettingsUpdate): Promise<RemoteResult<OffpeakSettings>>
-  getQueue(): Promise<RemoteResult<QueueEntry[]>>
-  cancelQueue(id: string): Promise<RemoteResult<QueueEntry[]>>
-  getLedger(limit: number): Promise<RemoteResult<LedgerEntry[]>>
-  clearLedger(): Promise<RemoteResult<number>>
 }

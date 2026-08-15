@@ -8,16 +8,26 @@
  */
 
 const CSS = `
+/*
+ * The token root. Every component root element carries dsh_offpeak_theme:
+ * these locals are the only place the harness tokens (and their fallbacks)
+ * are read, so nothing below an unthemed root resolves a color at all.
+ */
 .dsh_offpeak_theme {
-  /* Local semantic tokens with harness-token fallbacks. */
-  --dsh-offpeak-bg: var(--dsw-alias-bg-layer, #ffffff);
-  --dsh-offpeak-bg-raised: var(--dsw-alias-bg-base, #f7f8fa);
+  /*
+   * Local semantic tokens over the harness alias scale, with fallbacks for a
+   * deployment that does not ship it. The names must match the harness scale
+   * exactly — an alias that does not exist silently takes the fallback, which
+   * looks correct in the light theme and inverts in the dark one.
+   */
+  --dsh-offpeak-bg: var(--dsw-alias-bg-layer-1, #ffffff);
+  --dsh-offpeak-bg-raised: var(--dsw-alias-bg-module-platform, #f4f5f7);
   --dsh-offpeak-text: var(--dsw-alias-label-primary, #1f2329);
-  --dsh-offpeak-text-dim: var(--dsw-alias-label-dimmed, #646a73);
-  --dsh-offpeak-text-caption: var(--dsw-alias-label-caption, #8a919c);
-  --dsh-offpeak-border: var(--dsw-alias-border-l, rgba(31, 35, 41, 0.12));
-  --dsh-offpeak-accent: var(--dsw-alias-brand-primary, #4d6bfe);
-  --dsh-offpeak-hover: var(--dsw-alias-interactive-bg-hover, rgba(31, 35, 41, 0.06));
+  /* -secondary/-tertiary carry readable contrast; -dimmed is the ghost end. */
+  --dsh-offpeak-text-dim: var(--dsw-alias-label-secondary, #646a73);
+  --dsh-offpeak-text-caption: var(--dsw-alias-label-tertiary, #8a919c);
+  --dsh-offpeak-border: var(--dsw-alias-border-l2, rgba(31, 35, 41, 0.12));
+  --dsh-offpeak-accent: var(--dsw-alias-button-info-fill, #4d6bfe);
   --dsh-offpeak-shadow: 0 8px 32px rgba(15, 23, 42, 0.14);
 }
 
@@ -128,18 +138,6 @@ const CSS = `
   color: var(--dsh-offpeak-text-dim);
 }
 
-.dsh_offpeak_pillQueueBadge {
-  display: inline-flex;
-  align-items: center;
-  height: 16px;
-  padding: 0 6px;
-  border-radius: 999px;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--dsh-offpeak-text-dim);
-  background: var(--dsh-offpeak-hover);
-}
-
 /* Live pulse dot. */
 
 .dsh_offpeak_pulse {
@@ -195,7 +193,13 @@ const CSS = `
   min-width: 240px;
   padding: 12px 14px;
   border-radius: 14px;
-  background: color-mix(in srgb, var(--dsh-offpeak-bg) 88%, transparent);
+  /*
+   * Nearly opaque on purpose: the blur below is a progressive enhancement
+   * that a browser may report as supported and still not composite (and that
+   * a reduced-transparency setting drops), so the panel has to stay readable
+   * over conversation text on its background colour alone.
+   */
+  background: color-mix(in srgb, var(--dsh-offpeak-bg) 97%, transparent);
   -webkit-backdrop-filter: blur(16px) saturate(1.4);
   backdrop-filter: blur(16px) saturate(1.4);
   border: 1px solid var(--dsh-offpeak-border);
@@ -265,8 +269,9 @@ const CSS = `
   font-variant-numeric: tabular-nums;
 }
 
-.dsh_offpeak_tooltipTotal {
-  margin-left: 6px;
+.dsh_offpeak_tooltipZone {
+  margin-left: 5px;
+  font-weight: 500;
   color: var(--dsh-offpeak-text-caption);
 }
 
@@ -283,6 +288,7 @@ const CSS = `
   flex-direction: column;
   gap: 16px;
   color: var(--dsh-offpeak-text);
+  /* The section sits on the settings dialog's own surface, not on a layer. */
   --dsh-offpeak-bg: var(--dsw-alias-bg-base, #ffffff);
 }
 
@@ -446,194 +452,6 @@ const CSS = `
   box-shadow: 0 0 0 3px color-mix(in srgb, var(--dsh-offpeak-accent, #4d6bfe) 18%, transparent);
 }
 
-/* Queue rows. */
-
-.dsh_offpeak_queueList {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
-}
-
-.dsh_offpeak_queueRow {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 10px;
-  border-radius: 10px;
-  background: var(--dsh-offpeak-bg-raised);
-  border: 1px solid var(--dsh-offpeak-border);
-}
-
-.dsh_offpeak_queueMain {
-  flex: 1;
-  min-width: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.dsh_offpeak_queueSummary {
-  font-size: 12.5px;
-  font-weight: 600;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.dsh_offpeak_queueMeta {
-  font-size: 11px;
-  color: var(--dsh-offpeak-text-caption);
-  font-variant-numeric: tabular-nums;
-}
-
-.dsh_offpeak_chip {
-  flex: none;
-  padding: 2px 8px;
-  border-radius: 999px;
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-}
-
-.dsh_offpeak_chipPending {
-  color: #78350f;
-  background: rgba(251, 191, 36, 0.16);
-  border: 1px solid rgba(251, 191, 36, 0.4);
-}
-
-.dsh_offpeak_chipDone {
-  color: #052e16;
-  background: rgba(74, 222, 128, 0.14);
-  border: 1px solid rgba(74, 222, 128, 0.35);
-}
-
-.dsh_offpeak_chipCancelled {
-  color: var(--dsh-offpeak-text-dim);
-  background: var(--dsh-offpeak-hover);
-  border: 1px solid var(--dsh-offpeak-border);
-}
-
-.dsh_offpeak_smallButton {
-  flex: none;
-  height: 24px;
-  padding: 0 10px;
-  border-radius: 7px;
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--dsh-offpeak-text);
-  background: var(--dsh-offpeak-bg-raised);
-  border: 1px solid var(--dsh-offpeak-border);
-  cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
-}
-
-.dsh_offpeak_smallButton:hover:not(:disabled) {
-  background: var(--dsh-offpeak-hover);
-  border-color: var(--dsh-offpeak-border);
-}
-
-.dsh_offpeak_smallButton:disabled {
-  opacity: 0.45;
-  cursor: default;
-}
-
-.dsh_offpeak_smallButtonDanger {
-  color: #dc2626;
-  border-color: rgba(220, 38, 38, 0.35);
-}
-
-.dsh_offpeak_smallButtonDanger:hover:not(:disabled) {
-  background: rgba(220, 38, 38, 0.08);
-}
-
-.dsh_offpeak_empty {
-  padding: 18px 12px;
-  text-align: center;
-  font-size: 12px;
-  color: var(--dsh-offpeak-text-caption);
-  border: 1px dashed var(--dsh-offpeak-border);
-  border-radius: 10px;
-}
-
-/* Ledger summary + 7-day bars. */
-
-.dsh_offpeak_ledgerStats {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
-
-.dsh_offpeak_statCard {
-  flex: 1;
-  min-width: 120px;
-  padding: 10px 12px;
-  border-radius: 10px;
-  background: var(--dsh-offpeak-bg-raised);
-  border: 1px solid var(--dsh-offpeak-border);
-}
-
-.dsh_offpeak_statLabel {
-  font-size: 10.5px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--dsh-offpeak-text-caption);
-}
-
-.dsh_offpeak_statValue {
-  margin-top: 3px;
-  font-size: 17px;
-  font-weight: 800;
-  font-variant-numeric: tabular-nums;
-  background: linear-gradient(120deg, #4ade80, #2dd4bf);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.dsh_offpeak_chart {
-  display: flex;
-  align-items: flex-end;
-  gap: 6px;
-  height: 56px;
-  padding: 8px 4px 0;
-}
-
-.dsh_offpeak_chartBar {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-  min-width: 0;
-  flex: 1;
-}
-
-.dsh_offpeak_chartFill {
-  height: var(--dsh-offpeak-bar, 4%);
-  width: 100%;
-  max-width: 22px;
-  border-radius: 4px 4px 2px 2px;
-  background: linear-gradient(180deg, #4ade80, #2dd4bf);
-  transition: height 0.4s ease;
-}
-
-.dsh_offpeak_chartDay {
-  font-size: 9.5px;
-  color: var(--dsh-offpeak-text-caption);
-}
-
-.dsh_offpeak_chartEmpty {
-  width: 100%;
-  text-align: center;
-  font-size: 11px;
-  color: var(--dsh-offpeak-text-caption);
-  align-self: center;
-}
-
 /* Save indicator. */
 
 .dsh_offpeak_saveState {
@@ -658,14 +476,20 @@ const CSS = `
 }
 `
 
-const STYLE_ID = 'dsh-offpeak-styles'
+/** The id of the single injected `<style>` element. */
+export const OFFPEAK_STYLE_ID = 'dsh-offpeak-styles'
+
+/** The plugin stylesheet source (exposed so tests can assert its contract). */
+export function offpeakStyles(): string {
+  return CSS
+}
 
 /** Inject the plugin stylesheet exactly once. */
 export function adoptStyles(): void {
   if (typeof document === 'undefined') return
-  if (document.getElementById(STYLE_ID) !== null) return
+  if (document.getElementById(OFFPEAK_STYLE_ID) !== null) return
   const style = document.createElement('style')
-  style.id = STYLE_ID
+  style.id = OFFPEAK_STYLE_ID
   style.textContent = CSS
   document.head.appendChild(style)
 }

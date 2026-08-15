@@ -21,7 +21,7 @@ function check(label, condition, detail = '') {
 
 console.log('Verifying dsh-offpeak artifacts…')
 
-// 1. Host entry: named ESM plugin with name/inject/apply/Config.
+// 1. Host entry: named ESM plugin with name/inject/apply.
 const host = join(root, 'lib/index.js')
 check('lib/index.js exists', existsSync(host))
 if (existsSync(host)) {
@@ -29,8 +29,7 @@ if (existsSync(host)) {
   check('host exports name', mod.name === 'dsh-offpeak', String(mod.name))
   check('host exports apply', typeof mod.apply === 'function')
   check('host exports inject', Array.isArray(mod.inject))
-  check('host exports Config', typeof mod.Config === 'function')
-  const required = ['tools', 'settings', 'commands', 'typert']
+  const required = ['settings', 'typert']
   check('host inject lists all services', required.every(s => mod.inject.includes(s)), mod.inject.join(','))
 }
 

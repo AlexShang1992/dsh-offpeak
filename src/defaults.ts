@@ -2,10 +2,9 @@
  * Defaults and normalization for dsh-offpeak.
  *
  * Default prices follow the DeepSeek official pricing page at the time of
- * writing (USD per 1M tokens, off-peak base). DeepSeek has announced future
- * price changes — treat these as editable starting points, never as a
- * guarantee: every figure is user-overridable in Settings, and the README
- * documents how to keep them current.
+ * writing (USD per 1M tokens, off-peak base). Official prices change — treat
+ * these as editable starting points, never as a guarantee: every figure is
+ * user-overridable in Settings.
  */
 import type { OffpeakSettings } from './contract.ts'
 
@@ -25,7 +24,7 @@ export const DEFAULT_DISPLAY_UTC_OFFSET_MINUTES = 8 * 60
 /** Common USD → CNY reference used only when the user picks CNY display. */
 export const DEFAULT_CNY_PER_USD = 7.1
 
-/** Fresh settings defaults for Host and browser initialization. */
+/** Fresh settings defaults for host and browser initialization. */
 export function defaultOffpeakSettings(): OffpeakSettings {
   return {
     enabled: true,
@@ -36,7 +35,6 @@ export function defaultOffpeakSettings(): OffpeakSettings {
     outputPricePerM: DEFAULT_PRICES.outputPerM,
     peakMultiplier: DEFAULT_PEAK_MULTIPLIER,
     displayUtcOffsetMinutes: DEFAULT_DISPLAY_UTC_OFFSET_MINUTES,
-    remindOnSwitch: true,
   }
 }
 

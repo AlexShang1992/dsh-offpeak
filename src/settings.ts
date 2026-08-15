@@ -23,7 +23,6 @@ export const OffpeakSettingsSchema: z<OffpeakSettings> = z.object({
   outputPricePerM: z.number().min(0).default(DEFAULT_PRICES.outputPerM),
   peakMultiplier: z.number().min(1).max(100).default(DEFAULT_PEAK_MULTIPLIER),
   displayUtcOffsetMinutes: z.number().min(-840).max(840).default(DEFAULT_DISPLAY_UTC_OFFSET_MINUTES),
-  remindOnSwitch: z.boolean().default(true),
 })
 
 /**

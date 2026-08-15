@@ -1,21 +1,16 @@
 /**
- * Pricing engine tests: window boundaries, switch times, cost math,
- * now-vs-off-peak comparisons, and display helpers.
+ * Pricing engine tests: window boundaries, switch times, and the display
+ * helpers the status pill renders.
  */
 import { describe, expect, it } from 'vitest'
 import {
   PEAK_END_MINUTES,
   PEAK_START_MINUTES,
-  compareNowVsOffpeak,
-  costUsd,
   formatDuration,
   formatWallClock,
   msUntilNextSwitch,
   multiplierFor,
   nextSwitchAt,
-  roundUsd,
-  savingsForDay,
-  sumSavings,
   utcMinutesOf,
   windowKindAt,
 } from '../src/pricing.ts'
@@ -25,8 +20,6 @@ function utc(hour: number, minute = 0, second = 0, ms = 0): Date {
   const date = new Date(Date.UTC(2026, 2, 15, hour, minute, second, ms))
   return date
 }
-
-const PRICES = { inputPerM: 0.28, cacheHitPerM: 0.028, outputPerM: 0.42 }
 
 describe('windowKindAt', () => {
   it('classifies off-peak before 08:30 UTC', () => {
@@ -103,74 +96,6 @@ describe('nextSwitchAt', () => {
   })
 })
 
-describe('costUsd', () => {
-  it('computes a simple request', () => {
-    const cost = costUsd({ inputTokens: 1_000_000, outputTokens: 1_000_000, cacheHitTokens: 1_000_000 }, PRICES, 1)
-    expect(roundUsd(cost)).toBe(0.728)
-  })
-
-  it('applies the multiplier', () => {
-    const base = costUsd({ inputTokens: 1_000_000, outputTokens: 0, cacheHitTokens: 0 }, PRICES, 1)
-    const peak = costUsd({ inputTokens: 1_000_000, outputTokens: 0, cacheHitTokens: 0 }, PRICES, 2)
-    expect(peak).toBeCloseTo(base * 2, 10)
-  })
-
-  it('is zero for an empty request', () => {
-    expect(costUsd({ inputTokens: 0, outputTokens: 0, cacheHitTokens: 0 }, PRICES, 2)).toBe(0)
-  })
-})
-
-describe('compareNowVsOffpeak', () => {
-  it('reports no saving during off-peak', () => {
-    const comparison = compareNowVsOffpeak(
-      { inputTokens: 1_000_000, outputTokens: 1_000_000, cacheHitTokens: 0 },
-      PRICES,
-      2,
-      utc(20, 0),
-    )
-    expect(comparison.window).toBe('offpeak')
-    expect(comparison.multiplier).toBe(1)
-    expect(comparison.savingsUsd).toBe(0)
-    expect(comparison.savingsPercent).toBe(0)
-    expect(comparison.costNowUsd).toBe(comparison.costOffpeakUsd)
-  })
-
-  it('quantifies the deferral saving during peak', () => {
-    const comparison = compareNowVsOffpeak(
-      { inputTokens: 1_000_000, outputTokens: 500_000, cacheHitTokens: 2_000_000 },
-      PRICES,
-      2,
-      utc(10, 0),
-    )
-    expect(comparison.window).toBe('peak')
-    expect(comparison.multiplier).toBe(2)
-    expect(comparison.costNowUsd).toBeCloseTo(comparison.costOffpeakUsd * 2, 10)
-    expect(comparison.savingsUsd).toBeCloseTo(comparison.costOffpeakUsd, 10)
-    expect(comparison.savingsPercent).toBe(50)
-  })
-
-  it('never reports negative savings', () => {
-    const comparison = compareNowVsOffpeak(
-      { inputTokens: 1_000_000, outputTokens: 0, cacheHitTokens: 0 },
-      PRICES,
-      0.5,
-      utc(10, 0),
-    )
-    expect(comparison.savingsUsd).toBeGreaterThanOrEqual(0)
-  })
-
-  it('handles a zero-cost request', () => {
-    const comparison = compareNowVsOffpeak(
-      { inputTokens: 0, outputTokens: 0, cacheHitTokens: 0 },
-      PRICES,
-      2,
-      utc(10, 0),
-    )
-    expect(comparison.savingsPercent).toBe(0)
-    expect(comparison.costNowUsd).toBe(0)
-  })
-})
-
 describe('duration formatting', () => {
   it('formats hours and minutes compactly', () => {
     expect(formatDuration(4 * 3600_000 + 27 * 60_000)).toBe('4h27m')
@@ -200,32 +125,5 @@ describe('wall-clock formatting', () => {
     expect(formatWallClock(utc(8, 30), 480)).toBe('16:30')
     expect(formatWallClock(utc(16, 30), 480)).toBe('00:30')
     expect(formatWallClock(utc(1, 5), 0)).toBe('01:05')
-  })
-})
-
-describe('ledger aggregation', () => {
-  const ledger = [
-    { ts: '2026-03-15T10:00:00.000Z', savings: 1 },
-    { ts: '2026-03-15T12:00:00.000Z', savings: 0.5 },
-    { ts: '2026-03-14T10:00:00.000Z', savings: 2 },
-    { ts: '2026-03-14T18:00:00.000Z', savings: 0.75 },
-    { ts: '2026-03-16T00:00:00.000Z', savings: 3 },
-  ]
-
-  it('sums all savings', () => {
-    expect(sumSavings(ledger)).toBe(7.25)
-  })
-
-  it('aggregates per display day with the offset boundary', () => {
-    // UTC+8: the display day starts at 16:00Z the previous day, so Mar 14
-    // 18:00Z (Mar 15 02:00 local) belongs to the Mar 15 display day.
-    const day15 = new Date('2026-03-15T00:00:00.000Z')
-    expect(savingsForDay(ledger, day15, 480)).toBeCloseTo(2.25, 10)
-    expect(savingsForDay(ledger, day15, 0)).toBeCloseTo(1.5, 10)
-  })
-
-  it('handles an empty ledger', () => {
-    expect(sumSavings([])).toBe(0)
-    expect(savingsForDay([], new Date(), 480)).toBe(0)
   })
 })

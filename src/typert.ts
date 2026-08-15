@@ -21,16 +21,11 @@ export const TYPERT_MANIFEST: TypertContribution = {
       {
         key: 'offpeak',
         exportName: 'OffpeakRuntime',
-        description: 'Off-peak pricing status, durable settings, the defer queue, and the savings ledger.',
+        description: 'Durable peak/off-peak pricing preferences.',
         tags: [],
         members: [
-          { kind: 'method', name: 'getStatus', signature: 'getStatus(): OffpeakStatus' },
           { kind: 'method', name: 'getSettings', signature: 'getSettings(): OffpeakSettings' },
           { kind: 'method', name: 'updateSettings', signature: 'updateSettings(update: OffpeakSettingsUpdate): Promise<OffpeakSettings>' },
-          { kind: 'method', name: 'getQueue', signature: 'getQueue(): QueueEntry[]' },
-          { kind: 'method', name: 'cancelQueue', signature: 'cancelQueue(id: string): QueueEntry[]' },
-          { kind: 'method', name: 'getLedger', signature: 'getLedger(limit: number): LedgerEntry[]' },
-          { kind: 'method', name: 'clearLedger', signature: 'clearLedger(): number' },
         ],
         types: [],
       },
