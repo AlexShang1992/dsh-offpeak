@@ -4,11 +4,25 @@
 
 [English](README.md) | [简体中文](README.zh.md)
 
-![License](https://img.shields.io/github/license/dsh-offpeak/dsh-offpeak)
-![CI](https://img.shields.io/github/actions/workflow/status/dsh-offpeak/dsh-offpeak/ci.yml?branch=main)
-![Release](https://img.shields.io/github/v/release/dsh-offpeak/dsh-offpeak)
+![License](https://img.shields.io/github/license/AlexShang1992/dsh-offpeak)
+![CI](https://img.shields.io/github/actions/workflow/status/AlexShang1992/dsh-offpeak/ci.yml?branch=main)
+![Release](https://img.shields.io/github/v/release/AlexShang1992/dsh-offpeak)
 ![npm](https://img.shields.io/npm/v/dsh-offpeak)
 ![Downloads](https://img.shields.io/npm/dm/dsh-offpeak)
+
+## 界面预览
+
+**实时计价浮标**——当前时段、倍率、倒计时与有效价格；悬停查看完整面板：
+
+| 高峰时段（×2） | 错峰时段（×1） |
+| --- | --- |
+| ![高峰状态浮标](docs/screenshots/pill-peak.png) | ![错峰状态浮标](docs/screenshots/pill-offpeak.png) |
+
+**设置 → 插件 → 错峰助手**——计价偏好、错峰队列与含 7 天图表的省钱账本：
+
+![错峰助手设置面板](docs/screenshots/settings.png)
+
+> 截图由插件真实样式渲染生成（见 `scripts/generate-preview.mjs`），不会与线上 UI 失真。
 
 ## 为什么需要它
 
@@ -44,7 +58,7 @@ dsh plugin --profile web add dsh-offpeak
 或从 Git 仓库安装：
 
 ```sh
-dsh plugin --profile web add "github:dsh-offpeak/dsh-offpeak"
+dsh plugin --profile web add "github:AlexShang1992/dsh-offpeak"
 ```
 
 安装后重启 `dsh --profile web`。插件会出现在 **设置 → 插件 → 错峰助手**；浮标显示在输入框下方。

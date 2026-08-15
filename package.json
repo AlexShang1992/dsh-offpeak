@@ -45,12 +45,12 @@
   "author": "dsh-offpeak contributors",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dsh-offpeak/dsh-offpeak.git"
+    "url": "git+https://github.com/AlexShang1992/dsh-offpeak.git"
   },
   "bugs": {
-    "url": "https://github.com/dsh-offpeak/dsh-offpeak/issues"
+    "url": "https://github.com/AlexShang1992/dsh-offpeak/issues"
   },
-  "homepage": "https://github.com/dsh-offpeak/dsh-offpeak#readme",
+  "homepage": "https://github.com/AlexShang1992/dsh-offpeak#readme",
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"

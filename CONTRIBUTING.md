@@ -16,7 +16,7 @@ Thanks for taking the time to contribute! This project follows the conventions o
 
 ## What to work on
 
-- Check the [issues](https://github.com/dsh-offpeak/dsh-offpeak/issues) for `good first issue` labels.
+- Check the [issues](https://github.com/AlexShang1992/dsh-offpeak/issues) for `good first issue` labels.
 - See the [roadmap](README.md#roadmap) in the README for planned features.
 - If you plan a non-trivial change, open an issue first to discuss the approach.
 
@@ -71,4 +71,4 @@ All participants must follow the [Code of Conduct](CODE_OF_CONDUCT.md). Be respe
 
 ## Questions?
 
-Open a [discussion](https://github.com/dsh-offpeak/dsh-offpeak/discussions) or an issue. Thanks again!
+Open a [discussion](https://github.com/AlexShang1992/dsh-offpeak/discussions) or an issue. Thanks again!

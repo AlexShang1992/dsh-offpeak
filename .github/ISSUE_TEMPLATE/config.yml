@@ -1,8 +1,8 @@
 blank_issues_enabled: true
 contact_links:
   - name: Discussions
-    url: https://github.com/dsh-offpeak/dsh-offpeak/discussions
+    url: https://github.com/AlexShang1992/dsh-offpeak/discussions
     about: Ask questions, share setups, and discuss ideas
   - name: Security
-    url: https://github.com/dsh-offpeak/dsh-offpeak/security/policy
+    url: https://github.com/AlexShang1992/dsh-offpeak/security/policy
     about: Report vulnerabilities privately — please do not open public issues for security bugs

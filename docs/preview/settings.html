@@ -1,0 +1,795 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>dsh-offpeak settings</title>
+<style>
+
+.dsh_offpeak_theme {
+  /* Local semantic tokens with harness-token fallbacks. */
+  --dsh-offpeak-bg: var(--dsw-alias-bg-layer, #ffffff);
+  --dsh-offpeak-bg-raised: var(--dsw-alias-bg-base, #f7f8fa);
+  --dsh-offpeak-text: var(--dsw-alias-label-primary, #1f2329);
+  --dsh-offpeak-text-dim: var(--dsw-alias-label-dimmed, #646a73);
+  --dsh-offpeak-text-caption: var(--dsw-alias-label-caption, #8a919c);
+  --dsh-offpeak-border: var(--dsw-alias-border-l, rgba(31, 35, 41, 0.12));
+  --dsh-offpeak-accent: var(--dsw-alias-brand-primary, #4d6bfe);
+  --dsh-offpeak-hover: var(--dsw-alias-interactive-bg-hover, rgba(31, 35, 41, 0.06));
+  --dsh-offpeak-shadow: 0 8px 32px rgba(15, 23, 42, 0.14);
+}
+
+/* ------------------------------ Status pill ------------------------------ */
+
+.dsh_offpeak_pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 26px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+  color: var(--dsh-offpeak-text);
+  background: var(--dsh-offpeak-bg);
+  border: 1px solid var(--dsh-offpeak-border);
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+  cursor: default;
+  user-select: none;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  isolation: isolate;
+}
+
+.dsh_offpeak_pill::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(120deg,
+    rgba(74, 222, 128, 0.55), rgba(45, 212, 191, 0.5), rgba(96, 165, 250, 0.55),
+    rgba(74, 222, 128, 0.55));
+  background-size: 220% 220%;
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  animation: dsh-offpeak-border-slide 6s linear infinite;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.dsh_offpeak_pill[data-window='peak']::before {
+  background: linear-gradient(120deg,
+    rgba(251, 191, 36, 0.7), rgba(249, 115, 22, 0.65), rgba(236, 72, 153, 0.5),
+    rgba(251, 191, 36, 0.7));
+}
+
+.dsh_offpeak_pill:hover,
+.dsh_offpeak_pill:focus-within {
+  transform: translateY(-1px);
+  box-shadow: var(--dsh-offpeak-shadow);
+}
+
+.dsh_offpeak_pill:hover::before,
+.dsh_offpeak_pill:focus-within::before {
+  opacity: 1;
+}
+
+@keyframes dsh-offpeak-border-slide {
+  from { background-position: 0% 50%; }
+  to { background-position: 220% 50%; }
+}
+
+.dsh_offpeak_pillIcon {
+  width: 14px;
+  height: 14px;
+  flex: none;
+  color: #4ade80;
+  filter: drop-shadow(0 0 4px rgba(74, 222, 128, 0.55));
+  transition: color 0.3s ease, filter 0.3s ease;
+}
+
+.dsh_offpeak_pill[data-window='peak'] .dsh_offpeak_pillIcon {
+  color: #fbbf24;
+  filter: drop-shadow(0 0 4px rgba(251, 191, 36, 0.6));
+}
+
+.dsh_offpeak_pillLabel {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.dsh_offpeak_pillMultiplier {
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #052e16;
+  background: rgba(74, 222, 128, 0.18);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+  font-variant-numeric: tabular-nums;
+}
+
+.dsh_offpeak_pill[data-window='peak'] .dsh_offpeak_pillMultiplier {
+  color: #451a03;
+  background: rgba(251, 191, 36, 0.2);
+  border-color: rgba(251, 191, 36, 0.45);
+}
+
+.dsh_offpeak_pillCountdown {
+  font-variant-numeric: tabular-nums;
+  color: var(--dsh-offpeak-text-dim);
+}
+
+.dsh_offpeak_pillQueueBadge {
+  display: inline-flex;
+  align-items: center;
+  height: 16px;
+  padding: 0 6px;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--dsh-offpeak-text-dim);
+  background: var(--dsh-offpeak-hover);
+}
+
+/* Live pulse dot. */
+
+.dsh_offpeak_pulse {
+  position: relative;
+  display: inline-flex;
+  width: 7px;
+  height: 7px;
+}
+
+.dsh_offpeak_pulseCore {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: #4ade80;
+}
+
+.dsh_offpeak_pill[data-window='peak'] .dsh_offpeak_pulseCore {
+  background: #fbbf24;
+}
+
+.dsh_offpeak_pulseRing {
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  border: 1px solid currentColor;
+  opacity: 0.5;
+  animation: dsh-offpeak-pulse 2.2s ease-out infinite;
+}
+
+.dsh_offpeak_pulse {
+  color: #4ade80;
+}
+
+.dsh_offpeak_pill[data-window='peak'] .dsh_offpeak_pulse {
+  color: #fbbf24;
+}
+
+@keyframes dsh-offpeak-pulse {
+  0% { transform: scale(0.5); opacity: 0.6; }
+  70% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+
+/* -------------------------------- Tooltip -------------------------------- */
+
+.dsh_offpeak_tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  width: max-content;
+  max-width: 320px;
+  min-width: 240px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--dsh-offpeak-bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid var(--dsh-offpeak-border);
+  box-shadow: var(--dsh-offpeak-shadow);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s;
+  z-index: 40;
+  pointer-events: none;
+}
+
+.dsh_offpeak_pill:hover .dsh_offpeak_tooltip,
+.dsh_offpeak_pill:focus-within .dsh_offpeak_tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+.dsh_offpeak_tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: var(--dsh-offpeak-border);
+}
+
+.dsh_offpeak_tooltipTitle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.dsh_offpeak_tooltipSwitch {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--dsh-offpeak-text-dim);
+}
+
+.dsh_offpeak_tooltipRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 3px 0;
+  font-size: 11.5px;
+}
+
+.dsh_offpeak_tooltipRow + .dsh_offpeak_tooltipRow {
+  border-top: 1px dashed var(--dsh-offpeak-border);
+  margin-top: 3px;
+  padding-top: 5px;
+}
+
+.dsh_offpeak_tooltipLabel {
+  color: var(--dsh-offpeak-text-dim);
+}
+
+.dsh_offpeak_tooltipValue {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.dsh_offpeak_tooltipTotal {
+  margin-left: 6px;
+  color: var(--dsh-offpeak-text-caption);
+}
+
+.dsh_offpeak_tooltipDivider {
+  height: 1px;
+  margin: 8px 0;
+  background: var(--dsh-offpeak-border);
+}
+
+/* ----------------------------- Settings section --------------------------- */
+
+.dsh_offpeak_section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  color: var(--dsh-offpeak-text);
+  --dsh-offpeak-bg: var(--dsw-alias-bg-base, #ffffff);
+}
+
+.dsh_offpeak_sectionTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.dsh_offpeak_sectionSubtitle {
+  margin: 4px 0 0;
+  font-size: 12.5px;
+  color: var(--dsh-offpeak-text-dim);
+}
+
+.dsh_offpeak_card {
+  padding: 16px;
+  border-radius: 14px;
+  background: var(--dsh-offpeak-bg);
+  border: 1px solid var(--dsh-offpeak-border);
+}
+
+.dsh_offpeak_cardTitle {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 4px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.dsh_offpeak_cardDesc {
+  margin: 0 0 12px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--dsh-offpeak-text-dim);
+}
+
+/* Toggle switch. */
+
+.dsh_offpeak_toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--dsh-offpeak-bg-raised);
+  border: 1px solid var(--dsh-offpeak-border);
+  cursor: pointer;
+}
+
+.dsh_offpeak_toggle + .dsh_offpeak_toggle {
+  margin-top: 8px;
+}
+
+.dsh_offpeak_toggleText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dsh_offpeak_toggleLabel {
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.dsh_offpeak_toggleDesc {
+  font-size: 11.5px;
+  color: var(--dsh-offpeak-text-dim);
+}
+
+.dsh_offpeak_switch {
+  position: relative;
+  flex: none;
+  width: 34px;
+  height: 20px;
+  border-radius: 999px;
+  background: var(--dsh-offpeak-text-caption);
+  opacity: 0.55;
+  transition: background 0.2s ease, opacity 0.2s ease;
+}
+
+.dsh_offpeak_switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s ease;
+}
+
+.dsh_offpeak_toggle input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.dsh_offpeak_toggle input:checked + .dsh_offpeak_switch {
+  background: var(--dsh-offpeak-accent, #4d6bfe);
+  opacity: 1;
+}
+
+.dsh_offpeak_toggle input:checked + .dsh_offpeak_switch::after {
+  transform: translateX(14px);
+}
+
+.dsh_offpeak_toggle input:focus-visible + .dsh_offpeak_switch {
+  outline: 2px solid var(--dsh-offpeak-accent, #4d6bfe);
+  outline-offset: 2px;
+}
+
+/* Form grid. */
+
+.dsh_offpeak_form {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 10px;
+}
+
+.dsh_offpeak_field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.dsh_offpeak_fieldLabel {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--dsh-offpeak-text-dim);
+}
+
+.dsh_offpeak_fieldHint {
+  font-size: 10.5px;
+  color: var(--dsh-offpeak-text-caption);
+}
+
+.dsh_offpeak_input,
+.dsh_offpeak_select {
+  width: 100%;
+  height: 30px;
+  padding: 0 9px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--dsh-offpeak-text);
+  background: var(--dsh-offpeak-bg-raised);
+  border: 1px solid var(--dsh-offpeak-border);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dsh_offpeak_input:focus,
+.dsh_offpeak_select:focus {
+  outline: none;
+  border-color: var(--dsh-offpeak-accent, #4d6bfe);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--dsh-offpeak-accent, #4d6bfe) 18%, transparent);
+}
+
+/* Queue rows. */
+
+.dsh_offpeak_queueList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.dsh_offpeak_queueRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: var(--dsh-offpeak-bg-raised);
+  border: 1px solid var(--dsh-offpeak-border);
+}
+
+.dsh_offpeak_queueMain {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dsh_offpeak_queueSummary {
+  font-size: 12.5px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dsh_offpeak_queueMeta {
+  font-size: 11px;
+  color: var(--dsh-offpeak-text-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+.dsh_offpeak_chip {
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.dsh_offpeak_chipPending {
+  color: #78350f;
+  background: rgba(251, 191, 36, 0.16);
+  border: 1px solid rgba(251, 191, 36, 0.4);
+}
+
+.dsh_offpeak_chipDone {
+  color: #052e16;
+  background: rgba(74, 222, 128, 0.14);
+  border: 1px solid rgba(74, 222, 128, 0.35);
+}
+
+.dsh_offpeak_chipCancelled {
+  color: var(--dsh-offpeak-text-dim);
+  background: var(--dsh-offpeak-hover);
+  border: 1px solid var(--dsh-offpeak-border);
+}
+
+.dsh_offpeak_smallButton {
+  flex: none;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 7px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--dsh-offpeak-text);
+  background: var(--dsh-offpeak-bg-raised);
+  border: 1px solid var(--dsh-offpeak-border);
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.dsh_offpeak_smallButton:hover:not(:disabled) {
+  background: var(--dsh-offpeak-hover);
+  border-color: var(--dsh-offpeak-border);
+}
+
+.dsh_offpeak_smallButton:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.dsh_offpeak_smallButtonDanger {
+  color: #dc2626;
+  border-color: rgba(220, 38, 38, 0.35);
+}
+
+.dsh_offpeak_smallButtonDanger:hover:not(:disabled) {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+.dsh_offpeak_empty {
+  padding: 18px 12px;
+  text-align: center;
+  font-size: 12px;
+  color: var(--dsh-offpeak-text-caption);
+  border: 1px dashed var(--dsh-offpeak-border);
+  border-radius: 10px;
+}
+
+/* Ledger summary + 7-day bars. */
+
+.dsh_offpeak_ledgerStats {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.dsh_offpeak_statCard {
+  flex: 1;
+  min-width: 120px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--dsh-offpeak-bg-raised);
+  border: 1px solid var(--dsh-offpeak-border);
+}
+
+.dsh_offpeak_statLabel {
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--dsh-offpeak-text-caption);
+}
+
+.dsh_offpeak_statValue {
+  margin-top: 3px;
+  font-size: 17px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  background: linear-gradient(120deg, #4ade80, #2dd4bf);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.dsh_offpeak_chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 56px;
+  padding: 8px 4px 0;
+}
+
+.dsh_offpeak_chartBar {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.dsh_offpeak_chartFill {
+  height: var(--dsh-offpeak-bar, 4%);
+  width: 100%;
+  max-width: 22px;
+  border-radius: 4px 4px 2px 2px;
+  background: linear-gradient(180deg, #4ade80, #2dd4bf);
+  transition: height 0.4s ease;
+}
+
+.dsh_offpeak_chartDay {
+  font-size: 9.5px;
+  color: var(--dsh-offpeak-text-caption);
+}
+
+.dsh_offpeak_chartEmpty {
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  color: var(--dsh-offpeak-text-caption);
+  align-self: center;
+}
+
+/* Save indicator. */
+
+.dsh_offpeak_saveState {
+  font-size: 11px;
+  color: var(--dsh-offpeak-text-caption);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Reduced motion. */
+
+@media (prefers-reduced-motion: reduce) {
+  .dsh_offpeak_pill::before,
+  .dsh_offpeak_pulseRing {
+    animation: none;
+  }
+  .dsh_offpeak_pill,
+  .dsh_offpeak_tooltip,
+  .dsh_offpeak_switch,
+  .dsh_offpeak_switch::after {
+    transition: none;
+  }
+}
+
+
+.preview-theme {
+  --dsw-alias-bg-base: #f7f8fa;
+  --dsw-alias-bg-layer: #ffffff;
+  --dsw-alias-label-primary: #1f2329;
+  --dsw-alias-label-dimmed: #646a73;
+  --dsw-alias-label-caption: #8a919c;
+  --dsw-alias-border-l: rgba(31,35,41,0.12);
+  --dsw-alias-brand-primary: #4d6bfe;
+  --dsw-alias-interactive-bg-hover: rgba(31,35,41,0.12);
+}
+body { margin: 0; }
+.preview-stage {
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 28px;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+}
+/* Force the hover tooltip open for screenshots. */
+.preview-stage .dsh_offpeak_pill .dsh_offpeak_tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+</style>
+</head>
+<body class="preview-theme" style="background: #f2f3f5;">
+  <div class="preview-stage" style="justify-content: center;">
+    <div class="dsh_offpeak_section" style="max-width: 860px; width: 100%;">
+      <div>
+        <h2 class="dsh_offpeak_sectionTitle">错峰助手</h2>
+        <p class="dsh_offpeak_sectionSubtitle">高峰/错峰计价感知、延迟队列与省钱账本。</p>
+      </div>
+
+      <label class="dsh_offpeak_toggle">
+        <span class="dsh_offpeak_toggleText">
+          <span class="dsh_offpeak_toggleLabel">启用错峰面板</span>
+          <span class="dsh_offpeak_toggleDesc">显示计价浮标，并启用队列与账本。</span>
+        </span>
+        <input type="checkbox" checked>
+        <span class="dsh_offpeak_switch" aria-hidden="true"></span>
+      </label>
+
+      <div class="dsh_offpeak_card">
+        <h3 class="dsh_offpeak_cardTitle">计价</h3>
+        <p class="dsh_offpeak_cardDesc">基础（错峰）价格，单位：USD / 1M tokens。高峰时段 DeepSeek 按倍率加倍。官方价格会调整，请以官方计价页为准并及时更新。</p>
+        <div class="dsh_offpeak_form">
+          <div class="dsh_offpeak_field">
+            <span class="dsh_offpeak_fieldLabel">显示货币</span>
+            <select class="dsh_offpeak_select"><option>美元（$）</option><option>人民币（¥）</option></select>
+          </div>
+          <div class="dsh_offpeak_field">
+            <span class="dsh_offpeak_fieldLabel">输入价格（缓存未命中）</span>
+            <input class="dsh_offpeak_input" value="0.28">
+          </div>
+          <div class="dsh_offpeak_field">
+            <span class="dsh_offpeak_fieldLabel">缓存命中价格</span>
+            <input class="dsh_offpeak_input" value="0.028">
+          </div>
+          <div class="dsh_offpeak_field">
+            <span class="dsh_offpeak_fieldLabel">输出价格</span>
+            <input class="dsh_offpeak_input" value="0.42">
+          </div>
+          <div class="dsh_offpeak_field">
+            <span class="dsh_offpeak_fieldLabel">高峰倍率</span>
+            <input class="dsh_offpeak_input" value="2">
+            <span class="dsh_offpeak_fieldHint">高峰时段的价格倍率。官方值为 2。</span>
+          </div>
+          <div class="dsh_offpeak_field">
+            <span class="dsh_offpeak_fieldLabel">显示时区（UTC 偏移，分钟）</span>
+            <select class="dsh_offpeak_select"><option>UTC+8 (北京/Asia/Shanghai)</option></select>
+            <span class="dsh_offpeak_fieldHint">仅用于展示切换时间，如 480 = UTC+8（北京时间）。</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dsh_offpeak_card">
+        <h3 class="dsh_offpeak_cardTitle">错峰队列</h3>
+        <p class="dsh_offpeak_cardDesc">通过 /defer 或 offpeak_defer 工具暂存的任务。</p>
+        <div class="dsh_offpeak_queueList">
+          <div class="dsh_offpeak_queueRow">
+            <div class="dsh_offpeak_queueMain">
+              <span class="dsh_offpeak_queueSummary">跑一遍完整回归测试（12 个模块）</span>
+              <span class="dsh_offpeak_queueMeta">在高峰时段暂存 · $0.0821</span>
+            </div>
+            <span class="dsh_offpeak_chip dsh_offpeak_chipPending">待执行</span>
+            <button class="dsh_offpeak_smallButton dsh_offpeak_smallButtonDanger">取消</button>
+          </div>
+          <div class="dsh_offpeak_queueRow">
+            <div class="dsh_offpeak_queueMain">
+              <span class="dsh_offpeak_queueSummary">批量生成文档站点（11 个页面）</span>
+              <span class="dsh_offpeak_queueMeta">在高峰时段暂存 · $0.1530</span>
+            </div>
+            <span class="dsh_offpeak_chip dsh_offpeak_chipPending">待执行</span>
+            <button class="dsh_offpeak_smallButton dsh_offpeak_smallButtonDanger">取消</button>
+          </div>
+          <div class="dsh_offpeak_queueRow">
+            <div class="dsh_offpeak_queueMain">
+              <span class="dsh_offpeak_queueSummary">夜间增量备份 + 校验</span>
+              <span class="dsh_offpeak_queueMeta">在错峰时段暂存 · 已省 $0.0644</span>
+            </div>
+            <span class="dsh_offpeak_chip dsh_offpeak_chipDone">已完成</span>
+          </div>
+          <div class="dsh_offpeak_queueRow">
+            <div class="dsh_offpeak_queueMain">
+              <span class="dsh_offpeak_queueSummary">清理临时分支</span>
+              <span class="dsh_offpeak_queueMeta">在高峰时段暂存</span>
+            </div>
+            <span class="dsh_offpeak_chip dsh_offpeak_chipCancelled">已取消</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dsh_offpeak_card">
+        <h3 class="dsh_offpeak_cardTitle">省钱账本<button class="dsh_offpeak_smallButton dsh_offpeak_smallButtonDanger">清空账本</button></h3>
+        <p class="dsh_offpeak_cardDesc">估算与暂存记录的追加日志。节省额为估算值，非计费数据。</p>
+        <div class="dsh_offpeak_ledgerStats">
+          <div class="dsh_offpeak_statCard"><div class="dsh_offpeak_statLabel">累计估算节省</div><div class="dsh_offpeak_statValue">$2.8471</div></div>
+          <div class="dsh_offpeak_statCard"><div class="dsh_offpeak_statLabel">今日</div><div class="dsh_offpeak_statValue">$0.1832</div></div>
+          <div class="dsh_offpeak_statCard"><div class="dsh_offpeak_statLabel">记录数</div><div class="dsh_offpeak_statValue">42</div></div>
+        </div>
+        <div class="dsh_offpeak_chart" role="img" aria-label="近 7 天节省">
+          <div class="dsh_offpeak_chartBar"><div class="dsh_offpeak_chartFill" style="--dsh-offpeak-bar: 62%"></div><span class="dsh_offpeak_chartDay">六</span></div>
+          <div class="dsh_offpeak_chartBar"><div class="dsh_offpeak_chartFill" style="--dsh-offpeak-bar: 41%"></div><span class="dsh_offpeak_chartDay">日</span></div>
+          <div class="dsh_offpeak_chartBar"><div class="dsh_offpeak_chartFill" style="--dsh-offpeak-bar: 88%"></div><span class="dsh_offpeak_chartDay">一</span></div>
+          <div class="dsh_offpeak_chartBar"><div class="dsh_offpeak_chartFill" style="--dsh-offpeak-bar: 55%"></div><span class="dsh_offpeak_chartDay">二</span></div>
+          <div class="dsh_offpeak_chartBar"><div class="dsh_offpeak_chartFill" style="--dsh-offpeak-bar: 100%"></div><span class="dsh_offpeak_chartDay">三</span></div>
+          <div class="dsh_offpeak_chartBar"><div class="dsh_offpeak_chartFill" style="--dsh-offpeak-bar: 30%"></div><span class="dsh_offpeak_chartDay">四</span></div>
+          <div class="dsh_offpeak_chartBar"><div class="dsh_offpeak_chartFill" style="--dsh-offpeak-bar: 73%"></div><span class="dsh_offpeak_chartDay">五</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

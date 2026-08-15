@@ -4,11 +4,25 @@
 
 [English](README.md) | [简体中文](README.zh.md)
 
-![License](https://img.shields.io/github/license/dsh-offpeak/dsh-offpeak)
-![CI](https://img.shields.io/github/actions/workflow/status/dsh-offpeak/dsh-offpeak/ci.yml?branch=main)
-![Release](https://img.shields.io/github/v/release/dsh-offpeak/dsh-offpeak)
+![License](https://img.shields.io/github/license/AlexShang1992/dsh-offpeak)
+![CI](https://img.shields.io/github/actions/workflow/status/AlexShang1992/dsh-offpeak/ci.yml?branch=main)
+![Release](https://img.shields.io/github/v/release/AlexShang1992/dsh-offpeak)
 ![npm](https://img.shields.io/npm/v/dsh-offpeak)
 ![Downloads](https://img.shields.io/npm/dm/dsh-offpeak)
+
+## Screenshots
+
+**Live pricing pill** — the current window, multiplier, countdown, and effective prices; hover for the full readout:
+
+| Peak hours (×2) | Off-peak hours (×1) |
+| --- | --- |
+| ![Peak status pill](docs/screenshots/pill-peak.png) | ![Off-peak status pill](docs/screenshots/pill-offpeak.png) |
+
+**Settings → Plugins → Off-peak** — pricing preferences, the defer queue, and the savings ledger with a 7-day chart:
+
+![Off-peak settings panel](docs/screenshots/settings.png)
+
+> Screenshots are rendered from the plugin's real stylesheet (see `scripts/generate-preview.mjs`) and can never drift from the shipped UI.
 
 ## Why
 
@@ -44,7 +58,7 @@ dsh plugin --profile web add dsh-offpeak
 Or from a Git repository:
 
 ```sh
-dsh plugin --profile web add "github:dsh-offpeak/dsh-offpeak"
+dsh plugin --profile web add "github:AlexShang1992/dsh-offpeak"
 ```
 
 Restart `dsh --profile web` after installing. The plugin shows up under **Settings → Plugins → Off-peak**; the pill appears under the composer.

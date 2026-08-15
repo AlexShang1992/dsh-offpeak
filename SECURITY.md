@@ -18,7 +18,7 @@ privately instead:
 - **Email**: security@dsh-offpeak.dev (placeholder — replace with a real
   address before enabling)
 - **GitHub**: use the private vulnerability reporting flow at
-  https://github.com/dsh-offpeak/dsh-offpeak/security/advisories (requires a
+  https://github.com/AlexShang1992/dsh-offpeak/security/advisories (requires a
   real repository to be enabled)
 
 Include, if possible:
