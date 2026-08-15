@@ -138,24 +138,16 @@ export function msUntilNextSwitch(now: Date): number {
   return Math.max(1, nextSwitchAt(now).at.getTime() - now.getTime())
 }
 
-/** Format a duration for display: `3h 12m` or `12m 05s` (short form below one hour). */
+/** Format a duration for display at minute precision, compact style: `4h27m`, `47m`, or `<1m`. */
 export function formatDuration(ms: number): string {
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000))
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  if (hours > 0) return `${hours}h ${String(minutes).padStart(2, '0')}m`
-  if (minutes > 0) return `${minutes}m ${String(seconds).padStart(2, '0')}s`
-  return `${seconds}s`
-}
-
-/** Format a countdown with second precision for live clocks: `03:12:44`. */
-export function formatCountdown(ms: number): string {
-  const totalSeconds = Math.max(0, Math.floor(ms / 1000))
-  const hours = Math.floor(totalSeconds / 3600)
-  const minutes = Math.floor((totalSeconds % 3600) / 60)
-  const seconds = totalSeconds % 60
-  return [hours, minutes, seconds].map(part => String(part).padStart(2, '0')).join(':')
+  const totalMinutes = Math.floor(Math.max(0, ms) / 60_000)
+  if (totalMinutes >= 60) {
+    const hours = Math.floor(totalMinutes / 60)
+    const minutes = totalMinutes % 60
+    return `${hours}h${String(minutes).padStart(2, '0')}m`
+  }
+  if (totalMinutes > 0) return `${totalMinutes}m`
+  return '<1m'
 }
 
 /**

@@ -9,7 +9,7 @@ import { useEffect, useState, type ReactElement } from 'react'
 import type { InjectFace, PropsLocale, PropsRuntime } from '@deepseek-ai/dsh-client-ui-slots'
 import type { ObservableSnapshot } from '@deepseek-ai/dsh-client-runtime/client'
 import type { LedgerEntry, OffpeakSettings, QueueEntry } from '../contract.ts'
-import { formatCountdown, formatWallClock, multiplierFor, nextSwitchAt, savingsForDay, sumSavings, windowKindAt } from '../pricing.ts'
+import { formatDuration, multiplierFor, nextSwitchAt, savingsForDay, sumSavings, windowKindAt } from '../pricing.ts'
 import { MoonIcon, PulseDot, SunIcon } from './icons.tsx'
 import type { OffpeakKey } from './locales.ts'
 
@@ -61,7 +61,7 @@ export function OffpeakPill({ useSettings, useQueue, useLedger, t }: OffpeakPill
   const win = windowKindAt(date)
   const multiplier = multiplierFor(win, settings.peakMultiplier)
   const next = nextSwitchAt(date)
-  const countdown = formatCountdown(Math.max(0, next.at.getTime() - now))
+  const countdown = formatDuration(Math.max(0, next.at.getTime() - now))
   const pending = queue.filter(entry => entry.status === 'pending').length
   const savedToday = savingsForDay(ledger, date, settings.displayUtcOffsetMinutes)
   const savedTotal = sumSavings(ledger)
@@ -81,7 +81,7 @@ export function OffpeakPill({ useSettings, useQueue, useLedger, t }: OffpeakPill
       {win === 'peak' ? <SunIcon className="dsh_offpeak_pillIcon" /> : <MoonIcon className="dsh_offpeak_pillIcon" />}
       <span className="dsh_offpeak_pillLabel">{t(windowKey)}</span>
       <span className="dsh_offpeak_pillMultiplier">{t('pill.multiplier', { multiplier: String(multiplier) })}</span>
-      <span className="dsh_offpeak_pillCountdown">{t('pill.countdown', { countdown })}</span>
+      <span className="dsh_offpeak_pillCountdown">{t('pill.countdown', { countdown, window: t(nextKey) })}</span>
       {pending > 0 && (
         <span className="dsh_offpeak_pillQueueBadge">{t('pill.queueBadge', { count: String(pending) })}</span>
       )}
@@ -90,10 +90,7 @@ export function OffpeakPill({ useSettings, useQueue, useLedger, t }: OffpeakPill
         <div className="dsh_offpeak_tooltipTitle">
           <span>{t(windowKey)} · ×{String(multiplier)}</span>
           <span className="dsh_offpeak_tooltipSwitch">
-            {t('tooltip.nextSwitch', {
-              time: formatWallClock(next.at, settings.displayUtcOffsetMinutes),
-              window: t(nextKey),
-            })}
+            {t('tooltip.nextSwitch', { window: t(windowKey), nextWindow: t(nextKey), countdown })}
           </span>
         </div>
         <div className="dsh_offpeak_tooltipRow">

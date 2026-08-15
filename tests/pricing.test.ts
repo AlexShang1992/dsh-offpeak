@@ -8,7 +8,6 @@ import {
   PEAK_START_MINUTES,
   compareNowVsOffpeak,
   costUsd,
-  formatCountdown,
   formatDuration,
   formatWallClock,
   msUntilNextSwitch,
@@ -173,21 +172,22 @@ describe('compareNowVsOffpeak', () => {
 })
 
 describe('duration formatting', () => {
-  it('formats hours', () => {
-    expect(formatDuration(3 * 3600_000 + 12 * 60_000)).toBe('3h 12m')
+  it('formats hours and minutes compactly', () => {
+    expect(formatDuration(4 * 3600_000 + 27 * 60_000)).toBe('4h27m')
+    expect(formatDuration(3 * 3600_000 + 5 * 60_000)).toBe('3h05m')
   })
 
-  it('formats minutes with seconds', () => {
-    expect(formatDuration(12 * 60_000 + 5_000)).toBe('12m 05s')
+  it('formats minutes alone', () => {
+    expect(formatDuration(47 * 60_000 + 30_000)).toBe('47m')
   })
 
-  it('formats seconds', () => {
-    expect(formatDuration(7_000)).toBe('7s')
+  it('formats less than a minute', () => {
+    expect(formatDuration(7_000)).toBe('<1m')
+    expect(formatDuration(0)).toBe('<1m')
   })
 
-  it('countdown pads to HH:MM:SS', () => {
-    expect(formatCountdown(3 * 3600_000 + 12 * 60_000 + 44_000)).toBe('03:12:44')
-    expect(formatCountdown(0)).toBe('00:00:00')
+  it('never returns a negative duration', () => {
+    expect(formatDuration(-5_000)).toBe('<1m')
   })
 
   it('msUntilNextSwitch is positive', () => {
