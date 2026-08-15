@@ -1,7 +1,7 @@
 {
   "name": "dsh-offpeak",
   "version": "0.1.0",
-  "description": "A live peak/off-peak pricing readout for the DeepSeek Harness Web GUI: one status pill under the composer, with the effective prices on hover. \u00b7 DeepSeek Harness \u9519\u5cf0\u8ba1\u4ef7\u6d6e\u6807",
+  "description": "A live peak/off-peak pricing readout for the DeepSeek Harness Web GUI: one status pill under the composer, with the effective prices on hover. · DeepSeek Harness 错峰计价浮标",
   "license": "MIT",
   "publishConfig": {
     "access": "public"
@@ -41,10 +41,10 @@
     "off-peak",
     "peak",
     "pricing",
-    "\u9519\u5cf0",
-    "\u8ba1\u4ef7"
+    "错峰",
+    "计价"
   ],
-  "author": "Alex Shang <xinpengshang@gmail.com>",
+  "author": "Alex Shang <251859662+AlexShang1992@users.noreply.github.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/AlexShang1992/dsh-offpeak.git"
