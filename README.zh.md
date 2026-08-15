@@ -31,11 +31,15 @@ DeepSeek 按 UTC 定义的两个每日时段计价。本插件把这件事放到
 需要 Node.js ≥ 22.19 上的 [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) Web profile。
 
 ```sh
-dsh plugin --profile web add "github:AlexShang1992/dsh-offpeak"
+dsh plugin --profile web add https://github.com/AlexShang1992/dsh-offpeak/releases/latest/download/dsh-offpeak.tgz
 ```
 
-`dsh plugin` 会把参数转交给 pnpm，因此也可以钉版本：在末尾加 `#v0.1.0`。
-本包尚未发布到 npm。
+每个 release 都会带上这个打包好的 tarball；把 `latest` 换成 tag
+（`.../download/v0.1.0/dsh-offpeak.tgz`）即可钉住某个版本。本包尚未发布到 npm。
+
+直接安装 `github:` 引用**不可行**：仓库不提交构建产物，包需要靠自己的 `prepare`
+脚本构建，而 pnpm 10 默认拒绝执行依赖的生命周期脚本，除非使用方显式放行。
+tarball 则不需要任何构建步骤。
 
 重启 `dsh --profile web`。进入会话后浮标出现在输入框下方，计价表单出现在 **设置 → 错峰计价**。
 

@@ -31,11 +31,17 @@ The prices are **the ones you type in**, multiplied by the multiplier. The plugi
 Requires a [DeepSeek Harness](https://github.com/deepseek-ai/deepseek-harness) Web profile on Node.js ≥ 22.19.
 
 ```sh
-dsh plugin --profile web add "github:AlexShang1992/dsh-offpeak"
+dsh plugin --profile web add https://github.com/AlexShang1992/dsh-offpeak/releases/latest/download/dsh-offpeak.tgz
 ```
 
-`dsh plugin` forwards to pnpm, so a tag works too: append `#v0.1.0` to pin a
-release. The package is not on npm yet.
+Every release carries that packed tarball; swap `latest` for a tag
+(`.../download/v0.1.0/dsh-offpeak.tgz`) to pin one. The package is not on npm
+yet.
+
+Installing the `github:` reference directly does **not** work: the repository
+ships no build output, so the package would have to build itself through its
+`prepare` script, and pnpm 10 refuses to run a dependency's lifecycle scripts
+unless the consuming project allowlists it. The tarball needs no build step.
 
 Restart `dsh --profile web`. The pill appears under the composer inside a session; the pricing form appears under **Settings → Off-peak**.
 
