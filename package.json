@@ -152,7 +152,7 @@
     "@types/react-dom": "^18.2.0",
     "@vitest/coverage-v8": "^4.1.10",
     "esbuild": "^0.25.0",
-    "oxlint": "^0.16.0",
+    "oxlint": "^1.79.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "typescript": "^5.8.0",
